@@ -5,24 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1da5f284-7abc-4463-841f-3a1011c04e9b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/conftest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/locators/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/locators/main_page_locators.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/locators/order_feed_locators.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/locators/password_recovery_locators.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/base_page.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/main_page.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/order_feed_page.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/password_recovery_page.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_main_page.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_order_feed.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_password_recovery.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/locators/authorization_locators.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/conftest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locators/order_feed_locators.py" beforeDir="false" afterPath="$PROJECT_DIR$/locators/order_feed_locators.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locators/password_recovery_locators.py" beforeDir="false" afterPath="$PROJECT_DIR$/locators/password_recovery_locators.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/base_page.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/base_page.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/main_page.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/main_page.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/order_feed_page.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/order_feed_page.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/password_recovery_page.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/password_recovery_page.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_main_page.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_main_page.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_order_feed.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_order_feed.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_password_recovery.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_password_recovery.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,5 +111,15 @@
       <updated>1749978857496</updated>
     </task>
     <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/conftest.py</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

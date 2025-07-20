@@ -122,7 +122,8 @@ class PasswordRecoveryPage(BasePage):
         return "default_recovery@example.com"
 
     def get_password_field_type(self):
-        return self.get_element_attribute(self.locators.PASSWORD_INPUT, "type")
+        field = self.find_element(self.locators.PASSWORD_FIELD)
+        return field.get_attribute("type")
 
     def wait_for_password_field(self):
         return self.wait_for_element_visible(self.locators.PASSWORD_INPUT, timeout=5)

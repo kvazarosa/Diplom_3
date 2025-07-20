@@ -1,5 +1,7 @@
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, ElementClickInterceptedException
+from selenium.common.exceptions import TimeoutException, ElementClickInterceptedException, \
+    NoSuchElementException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from .base_page import BasePage
@@ -98,14 +100,91 @@ class OrderFeedPage(BasePage):
             raise
 
     def go_to_personal_account(self):
-        self.click_element(OrderFeedLocators.PERSONAL_ACCOUNT_BUTTON)
-        self.wait_for_url_contains("account")
-        return self
+        """Переход в личный кабинет с гарантированной загрузкой"""
+        try:
+            # Клик по кнопке личного кабинета
+            self.safe_click(OrderFeedLocators.PERSONAL_ACCOUNT_BUTTON)
+
+            # Ожидание загрузки страницы профиля
+            WebDriverWait(self.driver, 15).until(
+                EC.url_contains("/account/profile"),
+                message="Не произошел переход в личный кабинет"
+            )
+
+            # Дополнительное ожидание загрузки контента
+            time.sleep(1)
+            return self
+        except Exception as e:
+            print(f"Ошибка при переходе в личный кабинет: {str(e)}")
+            raise
 
     def go_to_order_history(self):
-        self.click_element(OrderFeedLocators.ORDER_HISTORY_TAB)
-        self.wait_for_url_contains("/profile/orders")
-        return self
+        """Надежный переход в историю заказов с полной проверкой состояния"""
+        max_attempts = 3
+        for attempt in range(1, max_attempts + 1):
+            try:
+                print(f"Попытка {attempt} перехода в историю заказов")
+
+                # 1. Переход в личный кабинет
+                self.go_to_personal_account()
+
+                # 2. Ожидание полной загрузки страницы
+                self.wait_for_full_load(timeout=20)
+
+                # 3. Явное ожидание перед поиском элементов
+                time.sleep(2)  # Краткая пауза для стабилизации DOM
+
+                # 4. Проверка текущего URL
+                current_url = self.driver.current_url
+                print(f"Текущий URL: {current_url}")
+
+                # 5. Поиск навигационного меню
+                nav_menu = self.wait_and_find(
+                    (By.XPATH, "//nav[contains(@class, 'Account_nav__')]"),
+                    timeout=15
+                )
+                print("Навигационное меню найдено")
+
+                # 6. Поиск вкладки истории заказов
+                history_tab = WebDriverWait(self.driver, 15).until(
+                    lambda d: d.find_element(*OrderFeedLocators.ORDER_HISTORY_TAB),
+                    message="Вкладка истории заказов не найдена"
+                )
+                print("Вкладка истории заказов найдена")
+
+                # 7. Прокрутка к элементу
+                self.driver.execute_script(
+                    "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
+                    history_tab
+                )
+                time.sleep(1)  # Пауза после прокрутки
+
+                # 8. Клик через JavaScript
+                self.driver.execute_script("arguments[0].click();", history_tab)
+                print("Клик по вкладке истории выполнен")
+
+                # 9. Ожидание загрузки истории заказов
+                WebDriverWait(self.driver, 20).until(
+                    lambda d: "/profile/orders" in d.current_url,
+                    message="Не произошел переход в историю заказов"
+                )
+
+                # 10. Дополнительная проверка загрузки контента
+                WebDriverWait(self.driver, 15).until(
+                    EC.visibility_of_element_located(OrderFeedLocators.ORDER_HISTORY_LOADED),
+                    message="Заголовок истории заказов не отображается"
+                )
+
+                print("Успешный переход в историю заказов")
+                return self
+
+            except Exception as e:
+                print(f"Ошибка при попытке {attempt}: {str(e)}")
+
+                if attempt == max_attempts:
+                    raise TimeoutException(f"Не удалось перейти в историю заказов после {max_attempts} попыток")
+
+                time.sleep(3)  # Пауза перед повторной попыткой
 
     def get_first_order_number(self, from_feed=True):
         locator = OrderFeedLocators.FIRST_ORDER_IN_FEED if from_feed else OrderFeedLocators.FIRST_ORDER_IN_HISTORY
@@ -197,3 +276,53 @@ class OrderFeedPage(BasePage):
                 return False
 
         return WebDriverWait(self.driver, timeout).until(order_present, message=f"Заказ {normalized} не появился в разделе 'В работе' за {timeout} сек")
+
+    def get_last_order_from_history(self):
+        self.go_to_personal_account()
+        history_tab = self.wait_for_element_clickable(OrderFeedLocators.ORDER_HISTORY_TAB, timeout=10)
+        self.driver.execute_script("arguments[0].click();", history_tab)
+        time.sleep(2)
+        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+        time.sleep(1)
+        orders = self.find_elements(OrderFeedLocators.ORDER_HISTORY_ITEMS)
+        if not orders:
+            raise NoSuchElementException("Не найдено заказов в истории")
+        return self.normalize_order_number(orders[-1].text)
+
+    def get_last_order_from_feed(self):
+        self.go_to_order_feed()
+        return self.normalize_order_number(
+            self.get_first_element_text(OrderFeedLocators.FIRST_ORDER_IN_FEED)
+        )
+
+    def create_order_and_get_number(self):
+        self.go_to_home_page()
+        order_number_text = self.create_burger_order()
+        return self.normalize_order_number(order_number_text)
+
+    def wait_for_modal_close(self, timeout=10):
+        if self.is_firefox():
+            try:
+                modal = (By.XPATH, "//div[contains(@class, 'Modal_modal_overlay')]")
+                WebDriverWait(self.driver, timeout).until(EC.invisibility_of_element_located(modal))
+            except:
+                pass
+
+    def safe_click_with_modal_wait(self, locator, timeout=10):
+        self.wait_for_modal_close()
+        return self.safe_click(locator, timeout)
+
+    def close_order_modal(self):
+        try:
+            close_button = self.wait_for_element_visible(OrderFeedLocators.MODAL_CLOSE_BUTTON, timeout=15)
+            if self.is_firefox():
+                time.sleep(1)
+            self.safe_click_element(close_button)
+            self.wait_for_element_invisible(OrderFeedLocators.MODAL_CLOSE_BUTTON, timeout=10)
+            if self.is_firefox():
+                time.sleep(0.5)
+        except Exception as e:
+            print(f"Не удалось закрыть модальное окно: {str(e)}")
+            self.driver.save_screenshot("modal_close_error.png")
+            raise
+        return self

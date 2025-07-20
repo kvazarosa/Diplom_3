@@ -1,14 +1,16 @@
 import pytest
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from data import Urls, TestData
 from locators.main_page_locators import MainPageLocators
+from locators.authorization_locators import AuthorizationLocators
+import allure
 
 
 @pytest.fixture(params=["Chrome", "Firefox"])
 def driver(request):
+    allure.step(f"Initialize {request.param} driver")
     if request.param == "Chrome":
         options = webdriver.ChromeOptions()
         options.add_argument("--start-maximized")
@@ -23,17 +25,19 @@ def driver(request):
 
     driver.get(Urls.HOME_PAGE_URL)
     yield driver
+    allure.step("Close driver")
     driver.quit()
 
 
 @pytest.fixture
 def auth_user(driver):
+    allure.step("Authenticate user")
     login_url = f"{Urls.HOME_PAGE_URL}{Urls.AUTHORIZATION_PAGE_URL}"
     driver.get(login_url)
     wait = WebDriverWait(driver, 15)
-    email_input = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@name='name']")))
-    password_input = driver.find_element(By.XPATH, "//input[@type='password']")
-    login_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Войти')]")
+    email_input = wait.until(EC.presence_of_element_located(AuthorizationLocators.EMAIL_INPUT))
+    password_input = driver.find_element(*AuthorizationLocators.PASSWORD_INPUT)
+    login_button = driver.find_element(*AuthorizationLocators.LOGIN_BUTTON)
     email_input.send_keys(TestData.VALID_EMAIL)
     password_input.send_keys(TestData.VALID_PASSWORD)
     login_button.click()

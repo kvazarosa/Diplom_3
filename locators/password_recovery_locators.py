@@ -14,6 +14,9 @@ class PasswordRecoveryLocators:
     LOGOUT_BTN = (By.XPATH, "//button[contains(text(), 'Выход')]")
     CURRENT_PASSWORD_INPUT = (By.XPATH, "//input[@type='password' and contains(@class, 'input__textfield')]")
     ENTER_NEW_PASSWORD = (By.XPATH, "//input[@type='password' and contains(@class, 'input__textfield')]")
+    HIDDEN_PASSWORD_INPUT = (By.XPATH, "//input[@type='password']")
+    VISIBLE_PASSWORD_INPUT = (By.XPATH, "//input[@type='text']")
+    PASSWORD_FIELD = (By.XPATH, "//input[contains(@class, 'input__textfield')]")
 
     # Проверочные элементы
     LOGIN_FORM = (By.CSS_SELECTOR, "input.input__textfield[name='name']")

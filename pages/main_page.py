@@ -68,3 +68,9 @@ class MainPage(BasePage):
         self.drag_bun_to_constructor()
         self.click_element(MainPageLocators.CHECKOUT_BUTTON)
         return self
+
+    def is_order_feed_page_opened(self):
+        WebDriverWait(self.driver, 10).until(
+            lambda d: "feed" in d.current_url
+        )
+        return "feed" in self.driver.current_url
