@@ -31,7 +31,8 @@ class PasswordRecoveryPage(BasePage):
     def toggle_password_visibility(self):
         initial_type = self.get_password_field_type()
         self.click_element(self.locators.EYE_ICON)
-        WebDriverWait(self.driver, 5).until(lambda d: self.get_password_field_type() != initial_type or self._is_password_visible_via_css())
+        WebDriverWait(self.driver, 5).until(
+            lambda d: self.get_password_field_type() != initial_type or self._is_password_visible_via_css())
         return self
 
     def is_password_visible(self):
@@ -116,7 +117,7 @@ class PasswordRecoveryPage(BasePage):
         self.click_element(locator)
 
     def get_password_visibility_state(self):
-        return self.get_element_attribute(self.locators.PASSWORD_INPUT,"type")
+        return self.get_element_attribute(self.locators.PASSWORD_INPUT, "type")
 
     def _get_recovery_email(self):
         return "default_recovery@example.com"
@@ -129,7 +130,8 @@ class PasswordRecoveryPage(BasePage):
         return self.wait_for_element_visible(self.locators.PASSWORD_INPUT, timeout=5)
 
     def _is_password_visible_via_css(self):
-        return self.driver.execute_script("return window.getComputedStyle(arguments[0]).webkitTextSecurity === 'none';", self.find_element(self.locators.PASSWORD_INPUT))
+        return self.driver.execute_script("return window.getComputedStyle(arguments[0]).webkitTextSecurity === 'none';",
+                                          self.find_element(self.locators.PASSWORD_INPUT))
 
     def click_eye_icon(self):
         self.click_element(self.locators.EYE_ICON)

@@ -2,6 +2,7 @@ from pages.base_page import BasePage
 from locators.main_page_locators import MainPageLocators
 from selenium.webdriver.support.ui import WebDriverWait
 
+
 class MainPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver)
@@ -60,8 +61,8 @@ class MainPage(BasePage):
 
     def is_constructor_page_visible(self):
         return (
-            self.is_element_visible(MainPageLocators.INGREDIENTS_SECTION) and
-            self.is_element_visible(MainPageLocators.PERSONAL_ACCOUNT_BUTTON)
+                self.is_element_visible(MainPageLocators.INGREDIENTS_SECTION) and
+                self.is_element_visible(MainPageLocators.PERSONAL_ACCOUNT_BUTTON)
         )
 
     def create_order(self):

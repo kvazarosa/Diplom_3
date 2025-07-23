@@ -9,6 +9,7 @@ from locators.order_feed_locators import OrderFeedLocators
 from data import Urls
 import time
 
+
 class OrderFeedPage(BasePage):
     def go_to_order_feed(self):
         self.driver.get(f"{Urls.HOME_PAGE_URL}{Urls.ORDER_FEED_URL}")
@@ -63,15 +64,19 @@ class OrderFeedPage(BasePage):
         time.sleep(1)
         self.click_element(OrderFeedLocators.CHECKOUT_BUTTON)
         try:
-            WebDriverWait(self.driver, 5).until(EC.invisibility_of_element_located(OrderFeedLocators.ORDER_NUMBER_PLACEHOLDER), "Placeholder номера заказа не исчез")
+            WebDriverWait(self.driver, 5).until(
+                EC.invisibility_of_element_located(OrderFeedLocators.ORDER_NUMBER_PLACEHOLDER),
+                "Placeholder номера заказа не исчез")
         except:
             pass
-        order_element = WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located(OrderFeedLocators.ORDER_NUMBER),"Номер заказа не появился за 15 секунд")
+        order_element = WebDriverWait(self.driver, 15).until(
+            EC.visibility_of_element_located(OrderFeedLocators.ORDER_NUMBER), "Номер заказа не появился за 15 секунд")
         return order_element.text
 
     def wait_for_elements_visible(self, locator, timeout=10):
         try:
-            return WebDriverWait(self.driver, timeout).until(EC.visibility_of_any_elements_located(locator), message=f"Элементы {locator} не стали видимыми за {timeout} сек")
+            return WebDriverWait(self.driver, timeout).until(EC.visibility_of_any_elements_located(locator),
+                                                             message=f"Элементы {locator} не стали видимыми за {timeout} сек")
         except TimeoutException:
             return []
 
@@ -90,7 +95,8 @@ class OrderFeedPage(BasePage):
 
     def wait_for_any_element_visible(self, locator, timeout=10):
         try:
-            elements = WebDriverWait(self.driver, timeout).until(EC.presence_of_all_elements_located(locator), message=f"Элементы {locator} не найдены за {timeout} сек")           # Проверяем видимость каждого элемента
+            elements = WebDriverWait(self.driver, timeout).until(EC.presence_of_all_elements_located(locator),
+                                                                 message=f"Элементы {locator} не найдены за {timeout} сек")  # Проверяем видимость каждого элемента
             for element in elements:
                 if element.is_displayed():
                     return elements
@@ -202,20 +208,26 @@ class OrderFeedPage(BasePage):
 
     def go_to_order_history_via_account(self):
         print("Шаг 1: Клик по кнопке 'Личный Кабинет'")
-        account_button = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable(OrderFeedLocators.PERSONAL_ACCOUNT_BUTTON), "Не удалось найти/кликнуть кнопку 'Личный Кабинет'")
+        account_button = WebDriverWait(self.driver, 20).until(
+            EC.element_to_be_clickable(OrderFeedLocators.PERSONAL_ACCOUNT_BUTTON),
+            "Не удалось найти/кликнуть кнопку 'Личный Кабинет'")
         self.highlight_element(account_button)
         account_button.click()
         print("Шаг 2: Ожидание загрузки профиля")
-        WebDriverWait(self.driver, 15).until(EC.url_contains("account/profile"),"Не произошел переход в профиль после 15 сек")
+        WebDriverWait(self.driver, 15).until(EC.url_contains("account/profile"),
+                                             "Не произошел переход в профиль после 15 сек")
         print("Шаг 3: Клик по вкладке 'История заказов'")
-        history_tab = WebDriverWait(self.driver, 20).until(EC.presence_of_element_located(OrderFeedLocators.ORDER_HISTORY_TAB),"Не найдена вкладка 'История заказов'")
+        history_tab = WebDriverWait(self.driver, 20).until(
+            EC.presence_of_element_located(OrderFeedLocators.ORDER_HISTORY_TAB), "Не найдена вкладка 'История заказов'")
         self.driver.execute_script("arguments[0].scrollIntoView();", history_tab)
         self.highlight_element(history_tab)
         history_tab.click()
         print("Шаг 4: Ожидание загрузки истории заказов")
-        WebDriverWait(self.driver, 15).until(EC.url_contains("order-history"),"Не произошел переход в историю заказов после 15 сек")
+        WebDriverWait(self.driver, 15).until(EC.url_contains("order-history"),
+                                             "Не произошел переход в историю заказов после 15 сек")
         print("Шаг 5: Проверка отображения заказов")
-        WebDriverWait(self.driver, 25).until(EC.visibility_of_element_located(OrderFeedLocators.FIRST_ORDER_IN_HISTORY),"Не отображаются заказы в истории после 25 сек")
+        WebDriverWait(self.driver, 25).until(EC.visibility_of_element_located(OrderFeedLocators.FIRST_ORDER_IN_HISTORY),
+                                             "Не отображаются заказы в истории после 25 сек")
         print("Успешный переход в историю заказов")
         return self
 
@@ -275,7 +287,8 @@ class OrderFeedPage(BasePage):
             except:
                 return False
 
-        return WebDriverWait(self.driver, timeout).until(order_present, message=f"Заказ {normalized} не появился в разделе 'В работе' за {timeout} сек")
+        return WebDriverWait(self.driver, timeout).until(order_present,
+                                                         message=f"Заказ {normalized} не появился в разделе 'В работе' за {timeout} сек")
 
     def get_last_order_from_history(self):
         self.go_to_personal_account()

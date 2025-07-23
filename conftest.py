@@ -52,4 +52,3 @@ def close_modals(driver):
         driver.find_element(*MainPageLocators.CROSS_WINDOW).click()
     except:
         pass
-

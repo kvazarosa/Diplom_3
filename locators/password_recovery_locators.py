@@ -21,6 +21,3 @@ class PasswordRecoveryLocators:
     # Проверочные элементы
     LOGIN_FORM = (By.CSS_SELECTOR, "input.input__textfield[name='name']")
     ORDER_HISTORY_SECTION = (By.CSS_SELECTOR, "ul.OrderHistory_profileList__374GU")
-
-
-

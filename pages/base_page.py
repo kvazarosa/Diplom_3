@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
+
 class BasePage:
     def __init__(self, driver):
         self.driver = driver
@@ -48,19 +49,23 @@ class BasePage:
         return text in self.get_current_url()
 
     def wait_for_element_visible(self, locator, timeout=10):
-        return WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator), message=f"Элемент {locator} не стал видимым за {timeout} сек")
+        return WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator),
+                                                         message=f"Элемент {locator} не стал видимым за {timeout} сек")
 
     def wait_for_element_clickable(self, locator, timeout=10):
-        return WebDriverWait(self.driver, timeout).until(EC.element_to_be_clickable(locator), message=f"Элемент {locator} не стал кликабельным за {timeout} сек")
+        return WebDriverWait(self.driver, timeout).until(EC.element_to_be_clickable(locator),
+                                                         message=f"Элемент {locator} не стал кликабельным за {timeout} сек")
 
     def wait_for_element_invisible(self, locator, timeout=20):
-        return WebDriverWait(self.driver, timeout).until(EC.invisibility_of_element_located(locator), message=f"Элемент {locator} не исчез за {timeout} сек")
+        return WebDriverWait(self.driver, timeout).until(EC.invisibility_of_element_located(locator),
+                                                         message=f"Элемент {locator} не исчез за {timeout} сек")
 
     def click_element(self, locator, timeout=10):
         WebDriverWait(self.driver, timeout).until(EC.element_to_be_clickable(locator)).click()
 
     def wait_for_element_present(self, locator, timeout=10):
-        return WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located(locator), message=f"Элемент {locator} не найден в DOM за {timeout} сек")
+        return WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located(locator),
+                                                         message=f"Элемент {locator} не найден в DOM за {timeout} сек")
 
     def close_modal_if_present(self):
         if self.is_firefox():
@@ -160,7 +165,8 @@ class BasePage:
 
     def find_elements(self, locator, timeout=10):
         try:
-            return WebDriverWait(self.driver, timeout).until(EC.presence_of_all_elements_located(locator), message=f"Элементы {locator} не найдены за {timeout} сек")
+            return WebDriverWait(self.driver, timeout).until(EC.presence_of_all_elements_located(locator),
+                                                             message=f"Элементы {locator} не найдены за {timeout} сек")
         except:
             return []
 
@@ -224,14 +230,16 @@ class BasePage:
 
     def wait_for_full_load(self, timeout=30):
         try:
-            WebDriverWait(self.driver, timeout).until(lambda d: d.execute_script("return document.readyState") == "complete")
+            WebDriverWait(self.driver, timeout).until(
+                lambda d: d.execute_script("return document.readyState") == "complete")
         except Exception as e:
             print(f"Страница не загрузилась полностью: {str(e)}")
 
     def reliable_scroll_to_element(self, element, max_attempts=3, delay=1):
         for attempt in range(max_attempts):
             try:
-                self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
+                self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
+                                           element)
                 time.sleep(delay)
                 if element.is_displayed():
                     return True
